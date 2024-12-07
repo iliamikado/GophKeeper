@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ type EnterData struct {
 	Metadata string `json:"metadata"`
 }
 
-func save_l_p(command []string) {
+func (cl *Client) save_l_p(command []string) {
 	if len(command) < 3 {
 		fmt.Println("Not enough arguments")
 		return
@@ -24,7 +24,7 @@ func save_l_p(command []string) {
 	if len(command) > 3 {
 		enterData.Metadata = command[3]
 	}
-	_, ans := sendReq(http.MethodPost, "save_enter_data", enterData)
+	_, ans := cl.sendReq(http.MethodPost, "enter_data/save", enterData)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
@@ -35,7 +35,7 @@ type GetEnterDataReq struct {
 	Key string `json:"key"`
 }
 
-func get_l_p(command []string) {
+func (cl *Client) get_l_p(command []string) {
 	if len(command) < 2 {
 		fmt.Println("Not enough arguments")
 		return
@@ -43,7 +43,7 @@ func get_l_p(command []string) {
 	var getEnterDataReq = GetEnterDataReq{
 		Key: command[1],
 	}
-	_, ans := sendReq(http.MethodGet, "get_enter_data", getEnterDataReq)
+	_, ans := cl.sendReq(http.MethodGet, "enter_data/get", getEnterDataReq)
 	if ans != nil {
 		var enterData EnterData
 		json.Unmarshal(ans, &enterData)

@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
-func login(command []string) {
+func (cl *Client) login(command []string) {
 	if len(command) < 3 {
 		fmt.Println("Not enough arguments")
 		return
@@ -20,13 +20,13 @@ func login(command []string) {
 		Login:    command[1],
 		Password: command[2],
 	}
-	resp, _ := sendReq(http.MethodPost, "login", user)
+	resp, _ := cl.sendReq(http.MethodPost, "login", user)
 	if resp != nil {
-		jwt = strings.TrimPrefix(resp.Header.Get("Set-Cookie"), "JWT=")
+		cl.jwt = strings.TrimPrefix(resp.Header.Get("Set-Cookie"), "JWT=")
 	}
 }
 
-func register(command []string) {
+func (cl *Client) register(command []string) {
 	if len(command) < 3 {
 		fmt.Println("Not enough arguments")
 		return
@@ -35,8 +35,8 @@ func register(command []string) {
 		Login:    command[1],
 		Password: command[2],
 	}
-	resp, _ := sendReq(http.MethodPost, "register", user)
+	resp, _ := cl.sendReq(http.MethodPost, "register", user)
 	if resp != nil {
-		jwt = strings.TrimPrefix(resp.Header.Get("Set-Cookie"), "JWT=")
+		cl.jwt = strings.TrimPrefix(resp.Header.Get("Set-Cookie"), "JWT=")
 	}
 }

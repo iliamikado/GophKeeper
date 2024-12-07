@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ type PaymentCard struct {
 	Metadata     string `json:"metadata"`
 }
 
-func save_card(command []string) {
+func (cl *Client) save_card(command []string) {
 	if len(command) < 4 {
 		fmt.Println("Not enough arguments")
 		return
@@ -26,7 +26,7 @@ func save_card(command []string) {
 	if len(command) > 4 {
 		paymentCard.Metadata = command[4]
 	}
-	_, ans := sendReq(http.MethodPost, "save_card_data", paymentCard)
+	_, ans := cl.sendReq(http.MethodPost, "card_data/save", paymentCard)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
@@ -37,7 +37,7 @@ type GetPaymentCardReq struct {
 	Key string `json:"key"`
 }
 
-func get_card(command []string) {
+func (cl *Client) get_card(command []string) {
 	if len(command) < 2 {
 		fmt.Println("Not enough arguments")
 		return
@@ -45,7 +45,7 @@ func get_card(command []string) {
 	var getPaymentCardReq = GetPaymentCardReq{
 		Key: command[1],
 	}
-	_, ans := sendReq(http.MethodGet, "get_card_data", getPaymentCardReq)
+	_, ans := cl.sendReq(http.MethodGet, "card_data/get", getPaymentCardReq)
 	if ans != nil {
 		var paymentCard PaymentCard
 		json.Unmarshal(ans, &paymentCard)

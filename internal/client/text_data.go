@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ type TextData struct {
 	Metadata string `json:"metadata"`
 }
 
-func save_text(command []string) {
+func (cl *Client) save_text(command []string) {
 	if len(command) < 2 {
 		fmt.Println("Not enough arguments")
 		return
@@ -22,7 +22,7 @@ func save_text(command []string) {
 	if len(command) > 2 {
 		textData.Metadata = command[2]
 	}
-	_, ans := sendReq(http.MethodPost, "save_text_data", textData)
+	_, ans := cl.sendReq(http.MethodPost, "text_data/save", textData)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
@@ -33,7 +33,7 @@ type GetTextDataReq struct {
 	Key string `json:"key"`
 }
 
-func get_text(command []string) {
+func (cl *Client) get_text(command []string) {
 	if len(command) < 2 {
 		fmt.Println("Not enough arguments")
 		return
@@ -41,7 +41,7 @@ func get_text(command []string) {
 	var getTextDataReq = GetTextDataReq{
 		Key: command[1],
 	}
-	_, ans := sendReq(http.MethodGet, "get_text_data", getTextDataReq)
+	_, ans := cl.sendReq(http.MethodGet, "text_data/get", getTextDataReq)
 	if ans != nil {
 		var textData TextData
 		json.Unmarshal(ans, &textData)

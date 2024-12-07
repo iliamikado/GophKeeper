@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"encoding/json"
@@ -12,8 +12,8 @@ type AllData struct {
 	PaymentCard []PaymentCard
 }
 
-func get_all() {
-	_, ans := sendReq(http.MethodGet, "get_all_data", nil)
+func (cl *Client) get_all() {
+	_, ans := cl.sendReq(http.MethodGet, "get_all", nil)
 	if ans != nil {
 		var allData AllData
 		json.Unmarshal(ans, &allData)
