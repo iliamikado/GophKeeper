@@ -16,7 +16,7 @@ func TestLogin(t *testing.T) {
 	}
 	passwordManager.Register(user.Login, user.Password)
 
-	req := httptest.NewRequest(http.MethodPost, "/login", dataToBody(user))
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/login", dataToBody(user))
 	rr := httptest.NewRecorder()
 
 	Login(rr, req)
@@ -25,7 +25,7 @@ func TestLogin(t *testing.T) {
 	header := rr.Header().Get("Set-Cookie")
 	assert.NotEmpty(t, header)
 
-	req = httptest.NewRequest(http.MethodPost, "/login", dataToBody(User{}))
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/login", dataToBody(User{}))
 	rr = httptest.NewRecorder()
 
 	Login(rr, req)

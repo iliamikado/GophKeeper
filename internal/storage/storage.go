@@ -18,10 +18,10 @@ type Storage interface {
 	SaveTextData(login string, data models.TextData)
 	// GetTextData - получение текста
 	GetTextData(login, Key string) (models.TextData, error)
-	// SaveBankCardData - сохранение банковской карты
-	SaveBankCardData(login string, data models.BankCardData)
-	// GetBankCardData - получение банковской карты
-	GetBankCardData(login, Key string) (models.BankCardData, error)
+	// SavePaymentCard - сохранение банковской карты
+	SavePaymentCard(login string, data models.PaymentCard)
+	// GetPaymentCard - получение банковской карты
+	GetPaymentCard(login, Key string) (models.PaymentCard, error)
 	// GetAllData - получение всех данных пользователя
 	GetAllData(login string) models.AllData
 }

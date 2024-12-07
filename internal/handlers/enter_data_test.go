@@ -19,7 +19,7 @@ func TestSaveEnterData(t *testing.T) {
 		Password: "bbb",
 		Metadata: "123",
 	}
-	req := httptest.NewRequest(http.MethodPost, "/save_enter_data", dataToBody(enterData))
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/enter_data/save", dataToBody(enterData))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr := httptest.NewRecorder()
 
@@ -34,7 +34,7 @@ func TestSaveEnterData(t *testing.T) {
 	assert.Equal(t, data.Password, enterData.Password)
 	assert.Equal(t, data.Metadata, enterData.Metadata)
 
-	req = httptest.NewRequest(http.MethodPost, "/save_enter_data", nil)
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/enter_data/save", nil)
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr = httptest.NewRecorder()
 	SaveEnterData(rr, req)
@@ -53,7 +53,7 @@ func TestGetEnterData(t *testing.T) {
 	}
 	key := passwordManager.SaveEnterData(defaultLogin, enterData)
 
-	req := httptest.NewRequest(http.MethodGet, "/get_enter_data", dataToBody(GetEnterDataReq{key}))
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/enter_data/get", dataToBody(GetEnterDataReq{key}))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr := httptest.NewRecorder()
 
@@ -68,7 +68,7 @@ func TestGetEnterData(t *testing.T) {
 	assert.Equal(t, respData.Password, enterData.Password)
 	assert.Equal(t, respData.Metadata, enterData.Metadata)
 
-	req = httptest.NewRequest(http.MethodPost, "/get_enter_data", nil)
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/enter_data/get", nil)
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr = httptest.NewRecorder()
 	GetEnterData(rr, req)

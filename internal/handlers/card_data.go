@@ -7,55 +7,55 @@ import (
 	"net/http"
 )
 
-type BankCardData struct {
-	Number string `json:"number"`
+type PaymentCard struct {
+	Number       string `json:"number"`
 	YearAndMonth string `json:"year_and_month"`
-	CVV string `json:"cvv"`
-	Metadata string `json:"metadata"`
+	CVV          string `json:"cvv"`
+	Metadata     string `json:"metadata"`
 }
 
-func SaveBankCardData(w http.ResponseWriter, r *http.Request) {
+func SavePaymentCard(w http.ResponseWriter, r *http.Request) {
 	login := r.Context().Value(loginKey{}).(string)
-	var bankCardData BankCardData
-	if err := json.NewDecoder(r.Body).Decode(&bankCardData); err != nil {
+	var paymentCard PaymentCard
+	if err := json.NewDecoder(r.Body).Decode(&paymentCard); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	key := passwordManager.SaveBankCardData(login, models.BankCardData{
-		Number: bankCardData.Number,
-		YearAndMonth: bankCardData.YearAndMonth,
-		CVV: bankCardData.CVV, 
+	key := passwordManager.SavePaymentCard(login, models.PaymentCard{
+		Number:       paymentCard.Number,
+		YearAndMonth: paymentCard.YearAndMonth,
+		CVV:          paymentCard.CVV,
 		Data: models.Data{
-			Metadata: bankCardData.Metadata,
+			Metadata: paymentCard.Metadata,
 		},
 	})
 	logger.Info("Save key " + key)
 	w.Write([]byte(key))
 }
 
-type GetBankCardDataReq struct {
+type GetPaymentCardReq struct {
 	Key string `json:"key"`
 }
 
-func GetBankCardData(w http.ResponseWriter, r *http.Request) {
+func GetPaymentCard(w http.ResponseWriter, r *http.Request) {
 	login := r.Context().Value(loginKey{}).(string)
-	var getBankCardDataReq GetBankCardDataReq
-	if err := json.NewDecoder(r.Body).Decode(&getBankCardDataReq); err != nil {
+	var getPaymentCardReq GetPaymentCardReq
+	if err := json.NewDecoder(r.Body).Decode(&getPaymentCardReq); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	key := getBankCardDataReq.Key
-	data, err := passwordManager.GetBankCardData(login, key)
-	if (err != nil) {
+	key := getPaymentCardReq.Key
+	data, err := passwordManager.GetPaymentCard(login, key)
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
-	resp, _ := json.Marshal(BankCardData{
-		Number: data.Number,
+	resp, _ := json.Marshal(PaymentCard{
+		Number:       data.Number,
 		YearAndMonth: data.YearAndMonth,
-		CVV: data.CVV,
-		Metadata: data.Metadata,
+		CVV:          data.CVV,
+		Metadata:     data.Metadata,
 	})
 	w.Write(resp)
 }

@@ -3,14 +3,14 @@ package models
 
 // Data - инфа с метаинформацией
 type Data struct {
-	Key string
+	Key      string
 	Metadata string
 }
 
 // EnterData - инфа о логине и пароле
 type EnterData struct {
 	Data
-	Login string
+	Login    string
 	Password string
 }
 
@@ -20,17 +20,17 @@ type TextData struct {
 	Text string
 }
 
-// BankCardData - инфа о банковской карте
-type BankCardData struct {
+// PaymentCard - инфа о банковской карте
+type PaymentCard struct {
 	Data
-	Number string
+	Number       string
 	YearAndMonth string
-	CVV string
+	CVV          string
 }
 
 // AllData - все данные пользователя
 type AllData struct {
-	EnterData []EnterData
-	TextData []TextData
-	BankCardData []BankCardData
+	EnterData   []EnterData
+	TextData    []TextData
+	PaymentCard []PaymentCard
 }

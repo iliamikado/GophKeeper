@@ -11,7 +11,7 @@ const defaultLogin string = "login"
 
 func initApp() {
 	manager.Initialize()
-	passwordManager = manager.PasswordManager
+	passwordManager = manager.AppManager
 	passwordManager.Register(defaultLogin, "a")
 }
 

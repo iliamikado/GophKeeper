@@ -12,59 +12,59 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSaveCardData(t *testing.T) {
+func TestSavePaymentCard(t *testing.T) {
 	initApp()
-	cardData := BankCardData{
-		Number: "2200 0000 0000 0000",
+	cardData := PaymentCard{
+		Number:       "2200 0000 0000 0000",
 		YearAndMonth: "08/08",
-		CVV: "333",
-		Metadata: "123",
+		CVV:          "333",
+		Metadata:     "123",
 	}
-	req := httptest.NewRequest(http.MethodPost, "/save_card_data", dataToBody(cardData))
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/save", dataToBody(cardData))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr := httptest.NewRecorder()
 
-	SaveBankCardData(rr, req)
+	SavePaymentCard(rr, req)
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 	key := rr.Body.String()
 	assert.NotEmpty(t, key)
-	data, err := passwordManager.GetBankCardData(defaultLogin, key)
+	data, err := passwordManager.GetPaymentCard(defaultLogin, key)
 	assert.NoError(t, err)
 	assert.Equal(t, data.Number, cardData.Number)
 	assert.Equal(t, data.YearAndMonth, cardData.YearAndMonth)
 	assert.Equal(t, data.CVV, cardData.CVV)
 	assert.Equal(t, data.Metadata, cardData.Metadata)
 
-	req = httptest.NewRequest(http.MethodPost, "/save_card_data", nil)
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/save", nil)
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr = httptest.NewRecorder()
-	SaveBankCardData(rr, req)
+	SavePaymentCard(rr, req)
 
 	assert.Equal(t, rr.Code, http.StatusBadRequest)
 }
 
-func TestGetCardData(t *testing.T) {
+func TestGetPaymentCard(t *testing.T) {
 	initApp()
-	cardData := models.BankCardData{
-		Number: "2200 0000 0000 0000",
+	cardData := models.PaymentCard{
+		Number:       "2200 0000 0000 0000",
 		YearAndMonth: "08/08",
-		CVV: "333",
+		CVV:          "333",
 		Data: models.Data{
 			Metadata: "123",
 		},
 	}
-	key := passwordManager.SaveBankCardData(defaultLogin, cardData)
+	key := passwordManager.SavePaymentCard(defaultLogin, cardData)
 
-	req := httptest.NewRequest(http.MethodGet, "/get_card_data", dataToBody(GetBankCardDataReq{key}))
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/payment_card/get", dataToBody(GetPaymentCardReq{key}))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr := httptest.NewRecorder()
 
-	GetBankCardData(rr, req)
+	GetPaymentCard(rr, req)
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 	respBody, _ := io.ReadAll(rr.Body)
-	var respData BankCardData
+	var respData PaymentCard
 	json.Unmarshal(respBody, &respData)
 	assert.NotEmpty(t, respData)
 	assert.Equal(t, respData.Number, cardData.Number)
@@ -72,10 +72,10 @@ func TestGetCardData(t *testing.T) {
 	assert.Equal(t, respData.CVV, cardData.CVV)
 	assert.Equal(t, respData.Metadata, cardData.Metadata)
 
-	req = httptest.NewRequest(http.MethodPost, "/get_card_data", nil)
+	req = httptest.NewRequest(http.MethodGet, "/api/v1/payment_card/get", nil)
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr = httptest.NewRecorder()
-	GetBankCardData(rr, req)
+	GetPaymentCard(rr, req)
 
 	assert.Equal(t, rr.Code, http.StatusBadRequest)
 }

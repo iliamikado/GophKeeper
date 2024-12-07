@@ -14,8 +14,8 @@ const SecretKey = "secret key"
 
 type loginKey struct{}
 
-// Claims - данные в jwt
-type Claims struct {
+// JWTClaims - данные в jwt
+type JWTClaims struct {
 	jwt.RegisteredClaims
 	Login string
 }
@@ -47,7 +47,7 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func getLogin(tokenString string) (string, error) {
-	claims := &Claims{}
+	claims := &JWTClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")

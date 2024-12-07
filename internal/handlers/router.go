@@ -7,19 +7,28 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-var passwordManager *manager.IPasswordManager
+var passwordManager *manager.PasswordManager
 
 func AppRouter() *chi.Mux {
-	passwordManager = manager.PasswordManager
+	passwordManager = manager.AppManager
 	r := chi.NewRouter()
-	r.Post("/register", Register)
-	r.Post("/login", Login)
-	r.Post("/save_enter_data", authMiddleware(SaveEnterData))
-	r.Get("/get_enter_data", authMiddleware(GetEnterData))
-	r.Post("/save_text_data", authMiddleware(SaveTextData))
-	r.Get("/get_text_data", authMiddleware(GetTextData))
-	r.Post("/save_card_data", authMiddleware(SaveBankCardData))
-	r.Get("/get_card_data", authMiddleware(GetBankCardData))
-	r.Get("/get_all_data", authMiddleware(GetAllData))
+	r.Route("/api/v1", func(r chi.Router) {
+		r.Post("/register", Register)
+		r.Post("/login", Login)
+		r.Route("/enter_data", func(r chi.Router) {
+			r.Post("/save", authMiddleware(SaveEnterData))
+			r.Get("/get", authMiddleware(GetEnterData))
+		})
+		r.Route("/text_data", func(r chi.Router) {
+			r.Post("/save", authMiddleware(SaveTextData))
+			r.Get("/get", authMiddleware(GetTextData))
+		})
+		r.Route("/payment_card", func(r chi.Router) {
+			r.Post("/save", authMiddleware(SavePaymentCard))
+			r.Get("/get", authMiddleware(GetPaymentCard))
+		})
+
+		r.Get("/get_all", authMiddleware(GetAllData))
+	})
 	return r
 }

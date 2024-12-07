@@ -23,9 +23,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func buildJWTString(login string) string {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, JWTClaims{
 		RegisteredClaims: jwt.RegisteredClaims{},
-		Login: login,
+		Login:            login,
 	})
 
 	tokenString, _ := token.SignedString([]byte(SecretKey))

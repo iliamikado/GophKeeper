@@ -7,9 +7,9 @@ import (
 )
 
 type AllData struct {
-	EnterData []EnterData
-	TextData []TextData
-	CardData []BankCardData
+	EnterData   []EnterData
+	TextData    []TextData
+	PaymentCard []PaymentCard
 }
 
 func get_all() {
@@ -17,7 +17,7 @@ func get_all() {
 	if ans != nil {
 		var allData AllData
 		json.Unmarshal(ans, &allData)
-		fmt.Println("Total saved data - ", len(allData.CardData) + len(allData.EnterData) + len(allData.TextData))
+		fmt.Println("Total saved data - ", len(allData.PaymentCard)+len(allData.EnterData)+len(allData.TextData))
 		fmt.Println("Enter data:")
 		for _, data := range allData.EnterData {
 			fmt.Println("Login: " + data.Login)
@@ -30,7 +30,7 @@ func get_all() {
 			fmt.Println()
 		}
 		fmt.Println("Card data:")
-		for _, data := range allData.CardData {
+		for _, data := range allData.PaymentCard {
 			fmt.Println("Number: " + data.Number)
 			fmt.Println("Year and month: " + data.YearAndMonth)
 			fmt.Println("CVV: " + data.CVV)

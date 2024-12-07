@@ -15,7 +15,7 @@ func TestRegister(t *testing.T) {
 		Password: "bbb",
 	}
 
-	req := httptest.NewRequest(http.MethodPost, "/register", dataToBody(user))
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/register", dataToBody(user))
 	rr := httptest.NewRecorder()
 
 	Register(rr, req)
@@ -24,7 +24,7 @@ func TestRegister(t *testing.T) {
 	header := rr.Header().Get("Set-Cookie")
 	assert.NotEmpty(t, header)
 
-	req = httptest.NewRequest(http.MethodPost, "/register", dataToBody(user))
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/register", dataToBody(user))
 	rr = httptest.NewRecorder()
 
 	Register(rr, req)

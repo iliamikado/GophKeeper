@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-type BankCardData struct {
-	Number string `json:"number"`
+type PaymentCard struct {
+	Number       string `json:"number"`
 	YearAndMonth string `json:"year_and_month"`
-	CVV string `json:"cvv"`
-	Metadata string `json:"metadata"`
+	CVV          string `json:"cvv"`
+	Metadata     string `json:"metadata"`
 }
 
 func save_card(command []string) {
@@ -18,22 +18,22 @@ func save_card(command []string) {
 		fmt.Println("Not enough arguments")
 		return
 	}
-	var bankCardData = BankCardData{
-		Number: command[1],
+	var paymentCard = PaymentCard{
+		Number:       command[1],
 		YearAndMonth: command[2],
-		CVV: command[3],
+		CVV:          command[3],
 	}
 	if len(command) > 4 {
-		bankCardData.Metadata = command[4]
+		paymentCard.Metadata = command[4]
 	}
-	_, ans := sendReq(http.MethodPost, "save_card_data", bankCardData)
+	_, ans := sendReq(http.MethodPost, "save_card_data", paymentCard)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
 
 }
 
-type GetBankCardDataReq struct {
+type GetPaymentCardReq struct {
 	Key string `json:"key"`
 }
 
@@ -42,17 +42,17 @@ func get_card(command []string) {
 		fmt.Println("Not enough arguments")
 		return
 	}
-	var getBankCardDataReq = GetBankCardDataReq{
+	var getPaymentCardReq = GetPaymentCardReq{
 		Key: command[1],
 	}
-	_, ans := sendReq(http.MethodGet, "get_card_data", getBankCardDataReq)
+	_, ans := sendReq(http.MethodGet, "get_card_data", getPaymentCardReq)
 	if ans != nil {
-		var bankCardData BankCardData
-		json.Unmarshal(ans, &bankCardData)
+		var paymentCard PaymentCard
+		json.Unmarshal(ans, &paymentCard)
 		fmt.Println("The data is:")
-		fmt.Println("Number: " + bankCardData.Number)
-		fmt.Println("Year and Month: " + bankCardData.YearAndMonth)
-		fmt.Println("CVV: " + bankCardData.CVV)
-		fmt.Println("Metadata: " + bankCardData.Metadata)
+		fmt.Println("Number: " + paymentCard.Number)
+		fmt.Println("Year and Month: " + paymentCard.YearAndMonth)
+		fmt.Println("CVV: " + paymentCard.CVV)
+		fmt.Println("Metadata: " + paymentCard.Metadata)
 	}
 }

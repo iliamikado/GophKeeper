@@ -7,23 +7,23 @@ import (
 	"math/rand"
 )
 
-// IPasswordManager - струкура основного приложения
-type IPasswordManager struct {
+// PasswordManager - струкура основного приложения
+type PasswordManager struct {
 	st storage.Storage
 }
 
 // PasswordManager - основнай экзэмпляр реализующий логику
-var PasswordManager *IPasswordManager
+var AppManager *PasswordManager
 
 // Initialize - инициализация PasswordManager
 func Initialize() {
-	PasswordManager = &IPasswordManager{
+	AppManager = &PasswordManager{
 		st: storage.NewSimpleStorage(),
 	}
 }
 
 // Register - регистрация пользователя
-func (pm *IPasswordManager) Register(login, password string) (string, error) {
+func (pm *PasswordManager) Register(login, password string) (string, error) {
 	err := pm.st.Register(login, password)
 	if err != nil {
 		return "", err
@@ -32,7 +32,7 @@ func (pm *IPasswordManager) Register(login, password string) (string, error) {
 }
 
 // Login - вход пользователя
-func (pm *IPasswordManager) Login(login, password string) (string, error) {
+func (pm *PasswordManager) Login(login, password string) (string, error) {
 	err := pm.st.Login(login, password)
 	if err != nil {
 		return "", err
@@ -41,52 +41,52 @@ func (pm *IPasswordManager) Login(login, password string) (string, error) {
 }
 
 // SaveEnterData - сохранение логина и пароля
-func (pm *IPasswordManager) SaveEnterData(login string, data models.EnterData) string {
+func (pm *PasswordManager) SaveEnterData(login string, data models.EnterData) string {
 	data.Key = MakeKey()
 	pm.st.SaveEnterData(login, data)
 	return data.Key
 }
 
 // GetEnterData - получение логина и пароля
-func (pm *IPasswordManager) GetEnterData(login, key string) (models.EnterData, error) {
+func (pm *PasswordManager) GetEnterData(login, key string) (models.EnterData, error) {
 	data, err := pm.st.GetEnterData(login, key)
 	return data, err
 }
 
 // SaveTextData - сохранение текстовой информации
-func (pm *IPasswordManager) SaveTextData(login string, data models.TextData) string {
+func (pm *PasswordManager) SaveTextData(login string, data models.TextData) string {
 	data.Key = MakeKey()
 	pm.st.SaveTextData(login, data)
 	return data.Key
 }
 
 // GetTextData - получение текстовой информации
-func (pm *IPasswordManager) GetTextData(login, key string) (models.TextData, error) {
+func (pm *PasswordManager) GetTextData(login, key string) (models.TextData, error) {
 	data, err := pm.st.GetTextData(login, key)
 	return data, err
 }
 
-// SaveBankCardData - сохранение информации о карте
-func (pm *IPasswordManager) SaveBankCardData(login string, data models.BankCardData) string {
+// SavePaymentCard - сохранение информации о карте
+func (pm *PasswordManager) SavePaymentCard(login string, data models.PaymentCard) string {
 	data.Key = MakeKey()
-	pm.st.SaveBankCardData(login, data)
+	pm.st.SavePaymentCard(login, data)
 	return data.Key
 }
 
-// GetBankCardData - получение информации о карте
-func (pm *IPasswordManager) GetBankCardData(login, key string) (models.BankCardData, error) {
-	data, err := pm.st.GetBankCardData(login, key)
+// GetPaymentCard - получение информации о карте
+func (pm *PasswordManager) GetPaymentCard(login, key string) (models.PaymentCard, error) {
+	data, err := pm.st.GetPaymentCard(login, key)
 	return data, err
 }
 
 // GetAllData - получение всей информации
-func (pm *IPasswordManager) GetAllData(login string) (models.AllData) {
+func (pm *PasswordManager) GetAllData(login string) models.AllData {
 	data := pm.st.GetAllData(login)
 	return data
 }
 
 // CheckLogin - проверка наличия логина
-func (pm *IPasswordManager) CheckLogin(login string) bool {
+func (pm *PasswordManager) CheckLogin(login string) bool {
 	return pm.st.CheckLogin(login)
 }
 
@@ -94,9 +94,9 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01
 
 // MakeKey - создание уникального ключа
 func MakeKey() string {
-    b := make([]rune, 5)
-    for i := range b {
-        b[i] = letterRunes[rand.Intn(len(letterRunes))]
-    }
-    return string(b)
+	b := make([]rune, 5)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }

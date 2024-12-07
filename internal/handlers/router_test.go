@@ -17,13 +17,13 @@ func TestAppRouter(t *testing.T) {
 		Password: "bbb",
 	}
 
-	req := httptest.NewRequest(http.MethodPost, "/register", dataToBody(user))
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/register", dataToBody(user))
 	rr := httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 
-	req = httptest.NewRequest(http.MethodPost, "/login", dataToBody(user))
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/login", dataToBody(user))
 	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
