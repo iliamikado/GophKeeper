@@ -20,7 +20,7 @@ func TestSavePaymentCard(t *testing.T) {
 		CVV:          "333",
 		Metadata:     "123",
 	}
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/save", dataToBody(cardData))
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/", dataToBody(cardData))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr := httptest.NewRecorder()
 
@@ -36,7 +36,7 @@ func TestSavePaymentCard(t *testing.T) {
 	assert.Equal(t, data.CVV, cardData.CVV)
 	assert.Equal(t, data.Metadata, cardData.Metadata)
 
-	req = httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/save", nil)
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/", nil)
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr = httptest.NewRecorder()
 	SavePaymentCard(rr, req)
@@ -56,7 +56,7 @@ func TestGetPaymentCard(t *testing.T) {
 	}
 	key := passwordManager.SavePaymentCard(defaultLogin, cardData)
 
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/payment_card/get", dataToBody(GetPaymentCardReq{key}))
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/payment_card/", dataToBody(GetPaymentCardReq{key}))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr := httptest.NewRecorder()
 
@@ -72,7 +72,7 @@ func TestGetPaymentCard(t *testing.T) {
 	assert.Equal(t, respData.CVV, cardData.CVV)
 	assert.Equal(t, respData.Metadata, cardData.Metadata)
 
-	req = httptest.NewRequest(http.MethodGet, "/api/v1/payment_card/get", nil)
+	req = httptest.NewRequest(http.MethodGet, "/api/v1/payment_card/", nil)
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
 	rr = httptest.NewRecorder()
 	GetPaymentCard(rr, req)

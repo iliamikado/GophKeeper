@@ -26,7 +26,7 @@ func (cl *Client) save_card(command []string) {
 	if len(command) > 4 {
 		paymentCard.Metadata = command[4]
 	}
-	_, ans := cl.sendReq(http.MethodPost, "card_data/save", paymentCard)
+	_, ans := cl.sendReq(http.MethodPost, "card_data/", paymentCard)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
@@ -45,7 +45,7 @@ func (cl *Client) get_card(command []string) {
 	var getPaymentCardReq = GetPaymentCardReq{
 		Key: command[1],
 	}
-	_, ans := cl.sendReq(http.MethodGet, "card_data/get", getPaymentCardReq)
+	_, ans := cl.sendReq(http.MethodGet, "card_data/", getPaymentCardReq)
 	if ans != nil {
 		var paymentCard PaymentCard
 		json.Unmarshal(ans, &paymentCard)

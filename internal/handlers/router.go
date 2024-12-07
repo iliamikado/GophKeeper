@@ -16,16 +16,16 @@ func AppRouter() *chi.Mux {
 		r.Post("/register", Register)
 		r.Post("/login", Login)
 		r.Route("/enter_data", func(r chi.Router) {
-			r.Post("/save", authMiddleware(SaveEnterData))
-			r.Get("/get", authMiddleware(GetEnterData))
+			r.Post("/", authMiddleware(SaveEnterData))
+			r.Get("/", authMiddleware(GetEnterData))
 		})
 		r.Route("/text_data", func(r chi.Router) {
-			r.Post("/save", authMiddleware(SaveTextData))
-			r.Get("/get", authMiddleware(GetTextData))
+			r.Post("/", authMiddleware(SaveTextData))
+			r.Get("/", authMiddleware(GetTextData))
 		})
 		r.Route("/payment_card", func(r chi.Router) {
-			r.Post("/save", authMiddleware(SavePaymentCard))
-			r.Get("/get", authMiddleware(GetPaymentCard))
+			r.Post("/", authMiddleware(SavePaymentCard))
+			r.Get("/", authMiddleware(GetPaymentCard))
 		})
 
 		r.Get("/get_all", authMiddleware(GetAllData))

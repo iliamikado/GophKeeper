@@ -24,7 +24,7 @@ func (cl *Client) save_l_p(command []string) {
 	if len(command) > 3 {
 		enterData.Metadata = command[3]
 	}
-	_, ans := cl.sendReq(http.MethodPost, "enter_data/save", enterData)
+	_, ans := cl.sendReq(http.MethodPost, "enter_data/", enterData)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
@@ -43,7 +43,7 @@ func (cl *Client) get_l_p(command []string) {
 	var getEnterDataReq = GetEnterDataReq{
 		Key: command[1],
 	}
-	_, ans := cl.sendReq(http.MethodGet, "enter_data/get", getEnterDataReq)
+	_, ans := cl.sendReq(http.MethodGet, "enter_data/", getEnterDataReq)
 	if ans != nil {
 		var enterData EnterData
 		json.Unmarshal(ans, &enterData)

@@ -22,7 +22,7 @@ func (cl *Client) save_text(command []string) {
 	if len(command) > 2 {
 		textData.Metadata = command[2]
 	}
-	_, ans := cl.sendReq(http.MethodPost, "text_data/save", textData)
+	_, ans := cl.sendReq(http.MethodPost, "text_data/", textData)
 	if ans != nil {
 		fmt.Println("Data saved. The key is " + string(ans))
 	}
@@ -41,7 +41,7 @@ func (cl *Client) get_text(command []string) {
 	var getTextDataReq = GetTextDataReq{
 		Key: command[1],
 	}
-	_, ans := cl.sendReq(http.MethodGet, "text_data/get", getTextDataReq)
+	_, ans := cl.sendReq(http.MethodGet, "text_data/", getTextDataReq)
 	if ans != nil {
 		var textData TextData
 		json.Unmarshal(ans, &textData)
