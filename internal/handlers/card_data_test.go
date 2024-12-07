@@ -14,11 +14,11 @@ import (
 
 func TestSavePaymentCard(t *testing.T) {
 	initApp()
-	cardData := PaymentCard{
+	cardData := models.PaymentCard{
 		Number:       "2200 0000 0000 0000",
 		YearAndMonth: "08/08",
 		CVV:          "333",
-		Metadata:     "123",
+		Data: models.Data{Metadata: "123"},
 	}
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/payment_card/", dataToBody(cardData))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
@@ -64,7 +64,7 @@ func TestGetPaymentCard(t *testing.T) {
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 	respBody, _ := io.ReadAll(rr.Body)
-	var respData PaymentCard
+	var respData models.PaymentCard
 	json.Unmarshal(respBody, &respData)
 	assert.NotEmpty(t, respData)
 	assert.Equal(t, respData.Number, cardData.Number)

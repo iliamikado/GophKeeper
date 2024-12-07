@@ -7,26 +7,14 @@ import (
 	"net/http"
 )
 
-type EnterData struct {
-	Login string `json:"login"`
-	Password string `json:"password"`
-	Metadata string `json:"metadata"`
-}
-
 func SaveEnterData(w http.ResponseWriter, r *http.Request) {
 	login := r.Context().Value(loginKey{}).(string)
-	var enterData EnterData
+	var enterData models.EnterData
 	if err := json.NewDecoder(r.Body).Decode(&enterData); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	key := passwordManager.SaveEnterData(login, models.EnterData{
-		Login: enterData.Login,
-		Password: enterData.Password,
-		Data: models.Data{
-			Metadata: enterData.Metadata,
-		},
-	})
+	key := passwordManager.SaveEnterData(login, enterData)
 	logger.Info("Save key " + key)
 	w.Write([]byte(key))
 }
@@ -43,16 +31,12 @@ func GetEnterData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	key := getEnterDataReq.Key
-	data, err := passwordManager.GetEnterData(login, key)
+	enterData, err := passwordManager.GetEnterData(login, key)
 	if (err != nil) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
-	resp, _ := json.Marshal(EnterData{
-		Login: data.Login,
-		Password: data.Password,
-		Metadata: data.Metadata,
-	})
+	resp, _ := json.Marshal(enterData)
 	w.Write(resp)
 }

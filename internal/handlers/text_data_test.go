@@ -14,9 +14,9 @@ import (
 
 func TestSaveTextData(t *testing.T) {
 	initApp()
-	textData := TextData{
+	textData := models.TextData{
 		Text:     "Hello",
-		Metadata: "123",
+		Data: models.Data{Metadata: "123"},
 	}
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/text_data/", dataToBody(textData))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
@@ -58,7 +58,7 @@ func TestGetTextData(t *testing.T) {
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 	respBody, _ := io.ReadAll(rr.Body)
-	var respData TextData
+	var respData models.TextData
 	json.Unmarshal(respBody, &respData)
 	assert.NotEmpty(t, respData)
 	assert.Equal(t, respData.Text, textData.Text)

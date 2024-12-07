@@ -48,7 +48,7 @@ func TestGetAllData(t *testing.T) {
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 	respBody, _ := io.ReadAll(rr.Body)
-	var respData AllData
+	var respData models.AllData
 	json.Unmarshal(respBody, &respData)
 	assert.NotEmpty(t, respData)
 	assert.Equal(t, len(respData.PaymentCard), 2)

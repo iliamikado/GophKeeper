@@ -14,10 +14,10 @@ import (
 
 func TestSaveEnterData(t *testing.T) {
 	initApp()
-	enterData := EnterData{
+	enterData := models.EnterData{
 		Login:    "aaa",
 		Password: "bbb",
-		Metadata: "123",
+		Data: models.Data{Metadata: "123"},
 	}
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/enter_data/", dataToBody(enterData))
 	req = req.WithContext(context.WithValue(req.Context(), loginKey{}, defaultLogin))
@@ -61,7 +61,7 @@ func TestGetEnterData(t *testing.T) {
 
 	assert.Equal(t, rr.Code, http.StatusOK)
 	respBody, _ := io.ReadAll(rr.Body)
-	var respData EnterData
+	var respData models.EnterData
 	json.Unmarshal(respBody, &respData)
 	assert.NotEmpty(t, respData)
 	assert.Equal(t, respData.Login, enterData.Login)

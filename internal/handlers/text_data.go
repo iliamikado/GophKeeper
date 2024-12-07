@@ -7,24 +7,14 @@ import (
 	"net/http"
 )
 
-type TextData struct {
-	Text string `json:"text"`
-	Metadata string `json:"metadata"`
-}
-
 func SaveTextData(w http.ResponseWriter, r *http.Request) {
 	login := r.Context().Value(loginKey{}).(string)
-	var textData TextData
+	var textData models.TextData
 	if err := json.NewDecoder(r.Body).Decode(&textData); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	key := passwordManager.SaveTextData(login, models.TextData{
-		Text: textData.Text, 
-		Data: models.Data{
-			Metadata: textData.Metadata,
-		},
-	})
+	key := passwordManager.SaveTextData(login, textData)
 	logger.Info("Save key " + key)
 	w.Write([]byte(key))
 }
@@ -41,15 +31,12 @@ func GetTextData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	key := getTextDataReq.Key
-	data, err := passwordManager.GetTextData(login, key)
+	textData, err := passwordManager.GetTextData(login, key)
 	if (err != nil) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
-	resp, _ := json.Marshal(TextData{
-		Text: data.Text,
-		Metadata: data.Metadata,
-	})
+	resp, _ := json.Marshal(textData)
 	w.Write(resp)
 }
